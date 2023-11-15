@@ -14,9 +14,7 @@ travelsRouter.get("/", async (req, res) => {
 
     try {
       if (travels.length === 0) {
-        const response = await axios(
-          "https://my-app-three-flame.vercel.app/data.json"
-        )
+        const response = await axios("https://my-app-three-flame.vercel.app/data.json")
         travels = response.data.datos
       }
 
@@ -50,7 +48,8 @@ travelsRouter.post("/", (req, res) => {
         const newItem = {...req.body, id: id++, date: new Date().getFullYear()}
         travels.push(newItem)
         //console.log(travels)
-        res.status(200).send("Created")
+        //res.status(200).send("Created")
+        res.status(200).json(newItem)
     }
 })
 

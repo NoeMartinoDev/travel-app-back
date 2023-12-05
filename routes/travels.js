@@ -1,6 +1,7 @@
 const express = require("express")
 const travelsRouter = express.Router()
 const axios = require("axios")
+const { Post } = require("../db")
 
 let travels = []
 
@@ -38,32 +39,35 @@ travelsRouter.get("/", async (req, res) => {
     }
 })
 
-let id = 7
-travelsRouter.post("/", (req, res) => {
-    const { title, user, city, location, description, image } = req.body
+travelsRouter.post("/", async (req, res) => {
+    const { title, UserId, city, location, description, image } = req.body
+    const date = new Date().getFullYear()
 
-    if(!title || !user || !city || !location || !description || !image) {
+    try {
+      if(!title || !UserId || !city || !location || !description || !image) {
         res.status(400).send("Missing data")
     } else {
-        const newItem = {...req.body, id: id++, date: new Date().getFullYear()}
-        travels.push(newItem)
-        //console.log(travels)
-        //res.status(200).send("Created")
-        res.status(200).json(newItem)
+        const newPost = await Post.create({ title, UserId, city, location, description, image, date })
+        res.status(200).json(newPost)
     }
+  } catch (error) {
+    res.status(500).json({ error: error.message})
+  }
 })
 
-travelsRouter.delete("/:id", (req, res) => {
+travelsRouter.delete("/:id", async (req, res) => {
     const { id } = req.params
 
-    const result = travels.find( item => item.id === Number(id))
-    if(result) {
-        const travelsFiltered = travels.filter( item => item.id !== Number(id))
-        travels = travelsFiltered
-        //console.log(travels)
-        res.status(200).send("Deleted")
-    } else {
+    try {
+      const postDeleted = await Post.findByPk(id)
+      if(postDeleted) {
+        await postDeleted.destroy()
+        res.status(200).send("Post deleted successfully")
+      } else {
         res.status(404).send("Not found")
+      }
+    } catch (error) {
+        res.status(500).json({ error: error.message})
     }
 })
 

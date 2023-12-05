@@ -25,5 +25,6 @@ User.hasMany(Post)
 Post.belongsTo(User)
 
 module.exports = {
-    database
+    database,
+    ...database.models
 }

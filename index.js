@@ -13,7 +13,7 @@ server.use("/travels", travelsRouter)
 
 server.use("/users", usersRouter)
 
-database.sync({ force: true }).then(() => {
+database.sync({ force: false }).then(() => {
     console.log("DB connected")
     server.listen(3001, () => {
         console.log("Listening on port 3001")

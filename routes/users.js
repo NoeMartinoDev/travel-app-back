@@ -12,34 +12,34 @@ usersRouter.get("/", async (req, res) => {
 })
 
 usersRouter.post("/login", async (req, res) => {
-    const { email, password} = req.body
+    const { email, password} = req.body;
 
     if(!email || !password) {
-        res.status(400).json({ error: "Missing data"})
+        res.status(400).json({ error: "Missing data" })
     } else {
         const user = await User.findOne({ where: { email } })
         if(!user) {
-            res.status(404).json({ error: "User not found"})
+            res.status(404).json({ error: "User not found" })
         } else {
             user.password === password
             ? res.status(200).json(user)
-            : res.status(200).json({ error: "Incorrect data"})
+            : res.status(200).json({ error: "Incorrect data" })
         }
     }
 })
 
 usersRouter.post("/register", async (req, res) => {
-    const { name, email, password } = req.body
+    const { name, email, password } = req.body;
 
     if(!name || !email || !password) {
-        res.status(400).json({ error: "Missing data"})
+        res.status(400).json({ error: "Missing data" })
     } else {
-        const user = await User.findOne({ where: { email }})
+        const user = await User.findOne({ where: { email } })
         if(user) {
             res.status(200).send("User alredy exits")
         } else {
-            const newUser = await User.create({ name, email, password })
-            res.status(200).json(newUser)
+            await User.create({ name, email, password })
+            res.status(200).send("User created successfully")
         }
     }
 })

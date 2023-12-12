@@ -8,53 +8,54 @@ const { Op, Sequelize } = require("sequelize");
 // }
 
 travelsRouter.get("/", async (req, res) => {
+  const { name } = req.query;
 
-    const { name } = req.query
-
-    try {
+  try {
       let travels;
+
       if (name) {
-        travels = await Post.findAll({
-          include: {
-            model: User,
-            attributes: [ "name" ]
-          },
-          where: {
-            [Op.or]: [
-               Sequelize.literal(`LOWER(city) = LOWER('${name}')`),
-               Sequelize.literal(`LOWER(location) = LOWER('${name}')`)
-             ]
+          travels = await Post.findAll({
+              include: {
+                  model: User,
+                  attributes: [ "name" ]
+              },
+              where: {
+                  [Op.or]: [
+                      Sequelize.literal(`LOWER(city) = LOWER('${name}')`),
+                      Sequelize.literal(`LOWER(location) = LOWER('${name}')`)
+                  ]
+              }
+          })
+
+          if (travels.length) {
+              res.status(200).json(travels)
+          } else {
+              res.status(200).json({ error: "Not found" })
           }
-        })
-        if (travels.length) {
-          res.status(200).json(travels)
-        } else {
-          res.status(200).json({ error: "Not found" })
-        }
       } else {
-        travels = await Post.findAll({
-          include: {
-            model: User,
-            attributes: [ "name" ]
+          travels = await Post.findAll({
+              include: {
+                  model: User,
+                  attributes: [ "name" ]
           }
-        })
-        res.status(200).json(travels)
+      })
+          res.status(200).json(travels)
       }
-    } catch (error) {
+  } catch (error) {
       res.status(500).json({ error: error.message })
-    }
+  }
 })
 
 travelsRouter.post("/", async (req, res) => {
-    const { title, UserId, city, location, description, image } = req.body
+    const { title, UserId, city, location, description, image } = req.body;
     const date = new Date().getFullYear()
 
     try {
       if(!title || !UserId || !city || !location || !description || !image) {
         res.status(400).send("Missing data")
     } else {
-        const newPost = await Post.create({ title, UserId, city, location, description, image, date })
-        res.status(200).json(newPost)
+        await Post.create({ title, UserId, city, location, description, image, date })
+        res.status(200).send("Post created successfully")
     }
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -62,7 +63,7 @@ travelsRouter.post("/", async (req, res) => {
 })
 
 travelsRouter.delete("/:id", async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
 
     try {
       const postToDelete = await Post.findByPk(id)
@@ -78,7 +79,7 @@ travelsRouter.delete("/:id", async (req, res) => {
 })
 
 travelsRouter.put("/", async (req, res) => {
-    const { id, title, city, location, description, image } = req.body
+    const { id, title, city, location, description, image } = req.body;
 
     try {
       const postToUpdate = await Post.findByPk(id)

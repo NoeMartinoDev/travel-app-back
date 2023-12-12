@@ -34,8 +34,13 @@ usersRouter.post("/register", async (req, res) => {
     if(!name || !email || !password) {
         res.status(400).json({ error: "Missing data"})
     } else {
-        const newUser = await User.create({ name, email, password })
-        res.status(200).json(newUser)
+        const user = await User.findOne({ where: { email }})
+        if(user) {
+            res.status(200).send("User alredy exits")
+        } else {
+            const newUser = await User.create({ name, email, password })
+            res.status(200).json(newUser)
+        }
     }
 })
 

@@ -14,7 +14,8 @@ module.exports = (database) => {
         email: {
             type: DataTypes.STRING,
             isEmail: true,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         password: {
             type: DataTypes.STRING,

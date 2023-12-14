@@ -19,7 +19,7 @@ usersRouter.post("/login", async (req, res) => {
     } else {
         const user = await User.findOne({ where: { email } })
         if(!user) {
-            res.status(404).json({ error: "User not found" })
+            res.status(200).json({ error: "User not found" })
         } else {
             user.password === password
             ? res.status(200).json(user)

@@ -7,6 +7,26 @@ const { Op, Sequelize } = require("sequelize");
 //   return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 // }
 
+travelsRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const travel = await Post.findByPk(id, {
+      include: {
+        model: User,
+        attributes: [ "name" ]
+      }
+    })
+    if(travel) {
+      res.status(200).json(travel)
+    } else {
+      res.status(404).json({ error: 'Not Found' })
+    }
+  } catch (error) {
+      res.status(500).json({ error: error.message })
+  }
+})
+
 travelsRouter.get("/", async (req, res) => {
   const { name } = req.query;
 

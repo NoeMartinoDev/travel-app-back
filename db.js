@@ -1,15 +1,17 @@
 const { Sequelize } = require("sequelize")
 
 require("dotenv").config()
-const { USER, PASSWORD, HOST, PORT, DB_NAME } = process.env
+const { USER, PASSWORD, HOSTANDPORT, DB_NAME } = process.env
 
 const UserModel = require("./models/User")
 const PostModel = require("./models/Post")
 
 const database = new Sequelize(
-    `postgres://${USER}:${PASSWORD}@${HOST}:${PORT}/${DB_NAME}`,
+    `postgres://${USER}:${PASSWORD}@${HOSTANDPORT}/${DB_NAME}`,
     { logging: false }
 )
+
+//HOSTANDPORT=localhost:5432
 
 UserModel(database)
 PostModel(database)

@@ -9,6 +9,17 @@ server.use(express.json())
 
 server.use(cors())
 
+const corsOptions = {
+    origin: "http://localhost:3000",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+}
+
+travelsRouter.use(cors(corsOptions))
+
+usersRouter.use(cors(corsOptions))
+
 server.use("/travels", travelsRouter)
 
 server.use("/users", usersRouter)

@@ -10,7 +10,7 @@ server.use(express.json())
 server.use(cors())
 
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin: [ "http://localhost:3000", "https://travel-app-xi-smoky.vercel.app" ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204
